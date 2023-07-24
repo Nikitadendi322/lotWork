@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: Galkin
+      changes:
+        - createTable:
+            tableName: bet
+            columns:
+              - column:
+                  name: id_bidder
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name_bidder
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: bid_date
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false

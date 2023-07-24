@@ -1,0 +1,5 @@
+databaseChangeLog:
+  - include:
+      file: liquibase/changesets/createBet.yml
+  - include:
+      file:  liquibase/changesets/createLot.yml
