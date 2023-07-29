@@ -15,4 +15,6 @@ public interface LotRepository extends CrudRepository<Lot, Integer> {
             "WHERE id:=id",
             nativeQuery = true)
     List<Lot> getLotById(@Param("id") int id);
+
+
 }

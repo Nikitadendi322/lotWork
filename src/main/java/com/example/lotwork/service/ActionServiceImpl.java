@@ -1,7 +1,10 @@
 package com.example.lotwork.service;
 
+import com.example.lotwork.DTO.BetDto;
 import com.example.lotwork.DTO.CreateLot;
 import com.example.lotwork.DTO.FullInfoLot;
+import com.example.lotwork.DTO.LotDto;
+import com.example.lotwork.controller.BetsController;
 import com.example.lotwork.exception.BetNotFoundException;
 import com.example.lotwork.exception.LotNotFoundException;
 import com.example.lotwork.model.Bet;
@@ -17,6 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.io.FileWriter;
@@ -24,10 +29,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 @Data
 @Service
-public class ActionServiceImpl implements ActionService {
+public abstract class ActionServiceImpl implements ActionService {
     private final LotRepository lotRepository;
     private final BetRepository betRepository;
     private final PaginLotRepository paginLotRepository;
@@ -43,6 +49,7 @@ public class ActionServiceImpl implements ActionService {
 
         return FullInfoLot.fromLot(lot);
     }
+
     @Override
     public void startLot(int id) {
         Lot lot = lotRepository.findById(id)
@@ -54,6 +61,7 @@ public class ActionServiceImpl implements ActionService {
         lot.setStatus(Status.STARTED);
         lotRepository.save(lot);
     }
+
     @Override
     public void placeABet(int id, String bidderName) {
         Lot lot = lotRepository.findById(id)
@@ -63,9 +71,9 @@ public class ActionServiceImpl implements ActionService {
                 });
         if (lot.getStatus() == Status.STARTED) {
             Bet bet = new Bet(bidderName);
-            List<Bet> bets = new LinkedList<>(lot.getId_bidder());
+            List<Bet> bets = new LinkedList<>(lot.getBets());
             bets.add(bet);
-            lot.setId_bidder(bets);
+            lot.setId(id);
             logger.info("Ставка по лоту " + id + " сделана");
             betRepository.save(bet);
             lotRepository.save(lot);
@@ -73,20 +81,21 @@ public class ActionServiceImpl implements ActionService {
             logger.error("Статус лота не позволяет сделать ставку");
         }
     }
+
     @Override
-    public Bet getFirstBidder(int id) {
+    public BetDto getFirstBidder(int id) {
         Lot lot = lotRepository.findById(id)
                 .orElseThrow(() -> {
                     logger.error("Лот с ID = " + id + " не найден");
                     return new LotNotFoundException(id);
                 });
-        Bet bet = lot.getId_bidder().stream()
+        Bet bet = lot.getBets().stream()
                 .findFirst()
                 .orElseThrow(() -> {
                     logger.error("Ставки нет");
                     return new BetNotFoundException();
                 });
-        return bet;
+        return BetDto.fromBet(bet);
     }
 
     @Override
@@ -102,21 +111,21 @@ public class ActionServiceImpl implements ActionService {
     }
 
     @Override
-    public Lot createLot(String title, String description, int startPrice, int bidPrice) {
+    public LotDto createLot(String title, String description, int startPrice, int bidPrice) {
         CreateLot createLot = new CreateLot(title, description, startPrice, bidPrice);
         Lot lot = createLot.toLot(createLot);
         lotRepository.save(lot);
         logger.info("Лот  создан");
-        return lot;
+        return LotDto.fromLot(lot);
     }
 
     @Override
-    public List<Lot> getLotsByStatusAndPage(Status status, int page) {
+    public List<LotDto> getLotsByStatusAndPage(Integer status, int page) {
         int unitPerPage = 10;
         PageRequest lotOfThePage = PageRequest.of(page, unitPerPage);
-        Page<Lot> pageLot = paginLotRepository.findAll(lotOfThePage);
+        Page<LotDto> pageLotDto = paginLotRepository.findAll(lotOfThePage);
         logger.info("Вызван метод getLotsByStatusAndPage");
-        return pageLot.stream().filter(l -> l.getStatus() == status).toList();
+        return pageLotDto.stream().filter(l -> l.getStatusId() == status).toList();
     }
 
     @Override
@@ -126,8 +135,8 @@ public class ActionServiceImpl implements ActionService {
                     logger.error("Лот с ID = " + id + " не найден");
                     return new LotNotFoundException(id);
                 });
-        String[] bidders = lot.getId_bidder().stream()
-                .map(b -> b.getNameBidder())
+        String[] bidders = lot.getBets().stream()
+                .map(Bet::getNameBidder)
                 .toList().toArray(new String[0]);
         logger.info("Вызван метод getFrequentBidder");
         return mostPopular(bidders);
@@ -162,11 +171,8 @@ public class ActionServiceImpl implements ActionService {
     @Override
     public String exportLots() throws IOException {
 
-
-
-
         String fileName = "src/test/resources/lots.csv";
-        String[] HEADERS = {"ID", "Status", "Title", "Discription", "Start Price", "Bid Price"};
+        String[] HEADERS = {"ID", "Status", "Title", "Description", "Start Price", "Bid Price"};
 
         FileWriter out = new FileWriter(fileName);
         try (CSVPrinter printer = new CSVPrinter(out, CSVFormat.DEFAULT
@@ -183,5 +189,12 @@ public class ActionServiceImpl implements ActionService {
 
         return fileName;
     }
+
+    @Query("SELECT new com.example.lotwork.controller.BetsController" +
+            "(b.nameBidder,MAX(b.bidDate))FROM Bid b WHERE b.lot.id=:id" +
+            " GROUP BY nameBidder ORDER BY COUNT(b.lot.id) DESC, LIMIT 1")
+    abstract Optional<BetsController> nameBedFrequentLot(@Param("id") int id);
+
+
 
 }

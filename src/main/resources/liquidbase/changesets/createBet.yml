@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: 2
-      author: Galkin
+      author: Pavlov
       changes:
         - createTable:
             tableName: bet

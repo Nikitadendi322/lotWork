@@ -26,12 +26,13 @@ public class FullInfoLot {
 
     private Bet getLastBetFromLot(Lot lot) {
         int count = getCountBet(lot);
-        Bet bet = lot.getId_bidder().get(--count);
+        Bet bet = lot.getBets().get(--count);
         return bet;
     }
 
     private int getCountBet(Lot lot) {
-        return lot.getId_bidder().size();
+
+        return lot.getBets().size();
     }
 
     public static FullInfoLot fromLot(Lot lot) {

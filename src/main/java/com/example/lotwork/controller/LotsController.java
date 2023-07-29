@@ -1,8 +1,7 @@
 package com.example.lotwork.controller;
 
 import com.example.lotwork.DTO.FullInfoLot;
-import com.example.lotwork.model.Lot;
-import com.example.lotwork.model.Status;
+import com.example.lotwork.DTO.LotDto;
 import com.example.lotwork.service.ActionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -42,15 +41,15 @@ public class LotsController {
     }
 
     @PostMapping
-    public Lot createLot(@RequestParam String title,
-                         @RequestParam String description,
-                         @RequestParam int startPrice,
-                         @RequestParam int bidPrice) {
+    public LotDto createLot(@RequestParam String title,
+                            @RequestParam String description,
+                            @RequestParam int startPrice,
+                            @RequestParam int bidPrice) {
         return actionService.createLot(title, description, startPrice, bidPrice);
     }
 
     @GetMapping()
-    public List<Lot> fullLots(@RequestParam("status") Status status,
+    public List<LotDto> fullLots(@RequestParam("status") Integer status,
                               @RequestParam("page") int page) {
         return actionService.getLotsByStatusAndPage(status, page);
     }

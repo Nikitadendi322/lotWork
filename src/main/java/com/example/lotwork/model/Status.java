@@ -5,7 +5,7 @@ public enum Status {
     STARTED(1),
     STOPPED(2);
 
-    private int statusId;
+    private final int statusId;
 
     Status(int statusNumber) {
         this.statusId = statusNumber;

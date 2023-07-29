@@ -35,8 +35,8 @@ public class Lot {
     private int bidPrice;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_bidder")
-    private List<Bet> id_bidder;
+    @JoinColumn(name = "bets")
+    private List<Bet> bets;
 
     public Lot(Integer id, int statusId, String title, String description, int startPrice, int bidPrice) {
         this.id = id;
@@ -57,4 +57,5 @@ public class Lot {
         }
         return status;
     }
+
 }

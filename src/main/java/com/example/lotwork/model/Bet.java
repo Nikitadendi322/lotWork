@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class Bet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id_bidder;
+    private int idBidder;
     @Column(name = "name_bidder")
     private String nameBidder;
     @Column(name = "bid_date")
