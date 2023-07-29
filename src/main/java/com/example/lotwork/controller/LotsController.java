@@ -55,7 +55,7 @@ public class LotsController {
     }
 
     @GetMapping("/export")
-    public String exportLots() throws IOException {
+    public int exportLots() throws IOException {
         return actionService.exportLots();
     }
 

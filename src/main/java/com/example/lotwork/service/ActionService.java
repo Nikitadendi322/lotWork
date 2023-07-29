@@ -18,7 +18,7 @@ public interface ActionService {
     BetDto getFirstBidder(int id);
 
 
-    String exportLots() throws IOException;
+    int exportLots() throws IOException;
 
 
 }

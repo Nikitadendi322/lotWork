@@ -169,7 +169,7 @@ public abstract class ActionServiceImpl implements ActionService {
     }
 
     @Override
-    public String exportLots() throws IOException {
+    public int exportLots() throws IOException {
 
         String fileName = "src/test/resources/lots.csv";
         String[] HEADERS = {"ID", "Status", "Title", "Description", "Start Price", "Bid Price"};
@@ -187,7 +187,7 @@ public abstract class ActionServiceImpl implements ActionService {
             });
         }
 
-        return fileName;
+        return Integer.parseInt(fileName);
     }
 
     @Query("SELECT new com.example.lotwork.controller.BetsController" +
