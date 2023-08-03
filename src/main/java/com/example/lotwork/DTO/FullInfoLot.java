@@ -20,6 +20,10 @@ public class FullInfoLot {
     private int currentPrice;
     private Bet lastBid;
 
+    public static FullInfoLot mapToFullInfoLot(Lot lot) {
+        return null;
+    }
+
     private int getCurrentPriseFromLot(Lot lot) {
         return lot.getStartPrice() + (lot.getBidPrice() * getCountBet(lot));
     }

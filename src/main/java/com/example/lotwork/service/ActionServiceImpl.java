@@ -4,7 +4,6 @@ import com.example.lotwork.DTO.BetDto;
 import com.example.lotwork.DTO.CreateLot;
 import com.example.lotwork.DTO.FullInfoLot;
 import com.example.lotwork.DTO.LotDto;
-import com.example.lotwork.controller.BetsController;
 import com.example.lotwork.exception.BetNotFoundException;
 import com.example.lotwork.exception.LotNotFoundException;
 import com.example.lotwork.model.Bet;
@@ -20,16 +19,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+
 
 @Data
 @Service
@@ -38,6 +34,9 @@ public abstract class ActionServiceImpl implements ActionService {
     private final BetRepository betRepository;
     private final PaginLotRepository paginLotRepository;
     private static final Logger logger = LoggerFactory.getLogger(ActionServiceImpl.class);
+    private Iterable<?> list;
+    private Object writer;
+    private Lot[] lot;
 
     @Override
     public FullInfoLot getEmployeeFullLotById(int id) {
@@ -169,7 +168,7 @@ public abstract class ActionServiceImpl implements ActionService {
     }
 
     @Override
-    public int exportLots() throws IOException {
+    public byte[] exportLots() throws IOException {
 
         String fileName = "src/test/resources/lots.csv";
         String[] HEADERS = {"ID", "Status", "Title", "Description", "Start Price", "Bid Price"};
@@ -187,14 +186,9 @@ public abstract class ActionServiceImpl implements ActionService {
             });
         }
 
-        return Integer.parseInt(fileName);
+        return File(byte[]);
+
     }
-
-    @Query("SELECT new com.example.lotwork.controller.BetsController" +
-            "(b.nameBidder,MAX(b.bidDate))FROM Bid b WHERE b.lot.id=:id" +
-            " GROUP BY nameBidder ORDER BY COUNT(b.lot.id) DESC, LIMIT 1")
-    abstract Optional<BetsController> nameBedFrequentLot(@Param("id") int id);
-
-
-
 }
+
+    

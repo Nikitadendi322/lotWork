@@ -3,7 +3,9 @@ package com.example.lotwork.controller;
 import com.example.lotwork.DTO.FullInfoLot;
 import com.example.lotwork.DTO.LotDto;
 import com.example.lotwork.service.ActionService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -54,8 +56,9 @@ public class LotsController {
         return actionService.getLotsByStatusAndPage(status, page);
     }
 
-    @GetMapping("/export")
-    public int exportLots() throws IOException {
+    @GetMapping(value = "/export",produces = MediaType.MULTIPART_FORM_DATA_VALUE)
+
+    public @ResponseBody byte[] exportLots() throws IOException {
         return actionService.exportLots();
     }
 

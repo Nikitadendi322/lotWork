@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class BetsController {
     private final ActionService actionService;
-    @GetMapping("{id}first")
+    @GetMapping("{id}/first")
     public BetDto infoFirstBet(@PathVariable Integer id) {
         return actionService.getFirstBidder(id);
     }

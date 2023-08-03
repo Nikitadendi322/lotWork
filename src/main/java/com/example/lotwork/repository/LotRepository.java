@@ -1,5 +1,6 @@
 package com.example.lotwork.repository;
 
+import com.example.lotwork.DTO.FullInfoLot;
 import com.example.lotwork.model.Lot;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -17,4 +18,5 @@ public interface LotRepository extends CrudRepository<Lot, Integer> {
     List<Lot> getLotById(@Param("id") int id);
 
 
+    Iterable<FullInfoLot> getFullLots();
 }
