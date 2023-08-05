@@ -1,5 +1,6 @@
 package com.example.lotwork.controller;
 
+import com.example.lotwork.DTO.CreateLot;
 import com.example.lotwork.DTO.FullInfoLot;
 import com.example.lotwork.DTO.LotDto;
 import com.example.lotwork.service.ActionService;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+
+import static jdk.javadoc.internal.doclets.formats.html.markup.HtmlStyle.title;
 
 @RestController
 @RequestMapping("/lot")
@@ -43,7 +46,8 @@ public class LotsController {
     }
 
     @PostMapping
-    public LotDto createLot(@RequestParam String title,
+    public LotDto createLot(CreateLot lot,
+                            @RequestParam String title,
                             @RequestParam String description,
                             @RequestParam int startPrice,
                             @RequestParam int bidPrice) {
@@ -56,10 +60,9 @@ public class LotsController {
         return actionService.getLotsByStatusAndPage(status, page);
     }
 
-    @GetMapping(value = "/export",produces = MediaType.MULTIPART_FORM_DATA_VALUE)
-
-    public @ResponseBody byte[] exportLots() throws IOException {
-        return actionService.exportLots();
+    @GetMapping("/export")
+    void  exportLots(HttpServletResponse response) throws IOException {
+        actionService.exportLots(response.getWriter());
     }
 
 }

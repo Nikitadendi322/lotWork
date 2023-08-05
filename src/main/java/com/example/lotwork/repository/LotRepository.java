@@ -2,6 +2,8 @@ package com.example.lotwork.repository;
 
 import com.example.lotwork.DTO.FullInfoLot;
 import com.example.lotwork.model.Lot;
+import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -31,4 +33,7 @@ public interface LotRepository extends CrudRepository<Lot, Integer> {
 
 
     Iterable<FullInfoLot> getFullLots();
+
+    @EntityGraph(attributePaths = {})
+    Page<Lot>startLot(Lot lot);
 }

@@ -5,6 +5,7 @@ import com.example.lotwork.DTO.FullInfoLot;
 import com.example.lotwork.DTO.LotDto;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 public interface ActionService {
@@ -18,7 +19,7 @@ public interface ActionService {
     BetDto getFirstBidder(int id);
 
 
-    byte[] exportLots() throws IOException;
+    void exportLots(PrintWriter Writer) throws IOException;
 
 
 

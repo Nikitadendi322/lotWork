@@ -19,11 +19,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 
 
@@ -61,6 +62,7 @@ public abstract class ActionServiceImpl implements ActionService {
         lotRepository.save(lot);
     }
 
+    @EntityGraph(attributePaths = {"id"})
     @Override
     public void placeABet(int id, String bidderName) {
         Lot lot = lotRepository.findById(id)
@@ -168,12 +170,12 @@ public abstract class ActionServiceImpl implements ActionService {
     }
 
     @Override
-    public byte[] exportLots() throws IOException {
+    public void exportLots(PrintWriter Writer) throws IOException {
 
         String fileName = "src/test/resources/lots.csv";
         String[] HEADERS = {"ID", "Status", "Title", "Description", "Start Price", "Bid Price"};
 
-        FileWriter out = new FileWriter(fileName);
+        FileWriter out = new FileWriter(String.valueOf(Writer));
         try (CSVPrinter printer = new CSVPrinter(out, CSVFormat.DEFAULT
                 .withHeader(HEADERS))) {
 
@@ -185,10 +187,5 @@ public abstract class ActionServiceImpl implements ActionService {
                 }
             });
         }
-
-        return File(byte[]);
-
     }
 }
-
-    
