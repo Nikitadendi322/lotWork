@@ -34,6 +34,5 @@ public interface LotRepository extends CrudRepository<Lot, Integer> {
 
     Iterable<FullInfoLot> getFullLots();
 
-    @EntityGraph(attributePaths = {})
-    Page<Lot>startLot(Lot lot);
+
 }

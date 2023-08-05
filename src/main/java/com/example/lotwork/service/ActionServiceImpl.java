@@ -175,8 +175,8 @@ public abstract class ActionServiceImpl implements ActionService {
         String fileName = "src/test/resources/lots.csv";
         String[] HEADERS = {"ID", "Status", "Title", "Description", "Start Price", "Bid Price"};
 
-        FileWriter out = new FileWriter(String.valueOf(Writer));
-        try (CSVPrinter printer = new CSVPrinter(out, CSVFormat.DEFAULT
+        FileWriter out = new FileWriter(fileName);
+        try (CSVPrinter printer = new CSVPrinter((Appendable) writer, CSVFormat.DEFAULT
                 .withHeader(HEADERS))) {
 
             lotRepository.findAll().forEach(l -> {
