@@ -170,13 +170,11 @@ public abstract class ActionServiceImpl implements ActionService {
     }
 
     @Override
-    public void exportLots(PrintWriter Writer) throws IOException {
+    public void exportLots(PrintWriter writer) throws IOException {
 
-        String fileName = "src/test/resources/lots.csv";
         String[] HEADERS = {"ID", "Status", "Title", "Description", "Start Price", "Bid Price"};
 
-        FileWriter out = new FileWriter(fileName);
-        try (CSVPrinter printer = new CSVPrinter((Appendable) writer, CSVFormat.DEFAULT
+        try (CSVPrinter printer = new CSVPrinter(writer, CSVFormat.DEFAULT
                 .withHeader(HEADERS))) {
 
             lotRepository.findAll().forEach(l -> {
